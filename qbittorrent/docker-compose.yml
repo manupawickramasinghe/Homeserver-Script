@@ -1,0 +1,23 @@
+version: "3.9"
+services:
+  qbittorrent-nox:
+    container_name: qbittorrent-nox
+    restart: unless-stopped
+    environment:
+      - QBT_EULA=accept
+      - QBT_VERSION=latest
+      - QBT_WEBUI_PORT=8080
+      - TZ=Asia/Kolkata # Timezone set to Asia/Kolkata
+    image: qbittorrentofficial/qbittorrent-nox:latest
+    ports:
+      - 6881:6881/tcp
+      - 6881:6881/udp
+      - 8080:8080/tcp
+    read_only: true # Recommended for security
+    stop_grace_period: 30m # Increased for graceful shutdown
+    tmpfs:
+      - /tmp # Use tmpfs for temporary files
+    tty: true # Keep tty for debugging if needed
+    volumes:
+      - ./config:/config # Configuration files persist here
+      - ${HOME}/Downloads:/downloads # Automatically uses the user's Downloads directory
