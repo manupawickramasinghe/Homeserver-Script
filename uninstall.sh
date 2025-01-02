@@ -6,6 +6,12 @@
 # Save the current directory
 INITIAL_DIR=$(pwd)
 
+# Stop and remove all Docker containers
+docker rm $(docker ps -a -f status=exited -q)
+docker container ls -a
+
+docker system prune -a
+
 # Detect the operating system
 if [ -f /etc/os-release ]; then
     source /etc/os-release

@@ -30,7 +30,6 @@ install_docker_ubuntu() {
       sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
     sudo apt-get update
     sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
-    sudo systemctl enable --now docker
 }
 
 # Function to install Docker on Debian-based systems
@@ -82,7 +81,7 @@ cp ./plex/docker-compose.yml "$PLEX_DIR"
 
 # Navigate to Plex directory and start services
 cd "$PLEX_DIR"
-docker-compose up -d
+docker compose up -d
 
 # Check running containers
 docker ps
@@ -106,7 +105,27 @@ sudo cp qbittorrent "$QBITTORRENT_DIR"
 
 # Navigate to qBittorrent directory and start services
 cd "$QBITTORRENT_DIR"
-docker-compose up -d
+docker compose up -d
+
+# Copy Uptime Kuma files
+UPTIME_KUMA=/opt/uptimekuma
+mkdir -p "$UPTIME_KUMA"
+
+sudo cp uptimekuma "$UPTIME_KUMA"
+
+# Navigate to Uptime Kuma directory and start services
+cd "$UPTIME_KUMA_DIR"
+docker compose up -d
+
+HOMEASSISTANT_DIR=/opt/homeassistant
+sudo mkdir -p /opt/homeassistant/{hass-config,nodered,mqtt-config,mqtt-data,mqtt-log}
+
+sudo cp homeassistant "$HOMEASSISTANT_DIR"
+sudo cp homeassistant/mosquitto.conf "$HOMEASSISTANT_DIR/mqtt-config"
+
+sudo chown -R 1883:1883 /opt/homeassistant/mqtt-config /opt/homeassistant/mqtt-data /opt/homeassistant/mqtt-log
+sudo chown -R 1000:1000 /opt/homeassistant/nodered
+
 
 # Return to the initial directory
 cd "$INITIAL_DIR"

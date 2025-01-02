@@ -11,5 +11,5 @@ services:
     volumes:
       - ./config:/config
       - ./transcode:/transcode
-      - ./media:/data
+      - /home/manupa/Downloads:/data
     restart: unless-stopped
